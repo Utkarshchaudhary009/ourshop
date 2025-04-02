@@ -48,16 +48,16 @@ export async function POST(request: NextRequest) {
       contentDescription = blog.excerpt || "";
       contentUrl = `/blog/${blog.slug}`;
     } else if (contentType === "Portfolio") {
-      const Portfolio = await Portfolio.findById(contentId);
-      if (!Portfolio) {
+      const portfolio = await Portfolio.findById(contentId);
+      if (!portfolio) {
         return NextResponse.json(
           { error: "Portfolio not found" },
           { status: 404 }
         );
       }
-      contentTitle = Portfolio.title;
-      contentDescription = Portfolio.description || "";
-      contentUrl = `/Portfolios/${Portfolio.slug}`;
+      contentTitle = portfolio.title;
+      contentDescription = portfolio.description || "";
+      contentUrl = `/portfolio/${portfolio.slug}`;
     } else {
       return NextResponse.json(
         { error: "Invalid content type" },
