@@ -8,12 +8,21 @@ export async function GET() {
   try {
     await connectDB();
     const details = await PersonalDetails.findOne();
-    // console.log(details);
+    console.log(details);
     if (!details) {
-      return NextResponse.json(
-        { message: "No personal details found" },
-        { status: 404 }
-      );
+      NextResponse.json({
+        name: "",
+        age: 0,
+        work: [],
+        stories: [],
+        title: "",
+        bio: "",
+        email: "",
+        location: "",
+        socialLinks: [],
+        profileImage: "",
+        resumePdf: "",
+      });
     }
 
     return NextResponse.json(details);
