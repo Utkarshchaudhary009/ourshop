@@ -154,7 +154,7 @@ export const SEOSchema = z.object({
   structuredData: z.record(z.string(), z.unknown()).optional(),
 });
 
-export const portfolioschema = z.object({
+export const PortfolioSchema = z.object({
   _id: z.string().optional(),
   title: z.string().min(3, "Title must be at least 3 characters"),
   slug: z.string().min(3, "Slug must be at least 3 characters"),
@@ -180,7 +180,7 @@ export const portfolioschema = z.object({
   updatedAt: z.date().optional(),
 });
 
-export const PortfolioRequestSchema = portfolioschema
+export const PortfolioRequestSchema = PortfolioSchema
   .omit({
     aiGenerated: true,
     embeddings: true,

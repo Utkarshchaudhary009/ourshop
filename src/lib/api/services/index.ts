@@ -4,7 +4,7 @@
  */
 
 // Export all services
-export * from "./PortfolioService";
+export * from "./portfolioService";
 export * from "./blogService";
 export * from "./contactService";
 export * from "./adService";

@@ -1,23 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { IPortfolio } from "@/lib/types";
 
-// Query keys
-export const PortfolioKeys = {
+// Query keys for portfolios
+export const portfolioKeys = {
   all: ["portfolios"] as const,
-  lists: () => [...PortfolioKeys.all, "list"] as const,
-  list: (filters: Record<string, string> = {}) =>
-    [...PortfolioKeys.lists(), filters] as const,
-  details: () => [...PortfolioKeys.all, "detail"] as const,
-  detail: (slug: string) => [...PortfolioKeys.details(), slug] as const,
-  featured: () => [...PortfolioKeys.all, "featured"] as const,
+  lists: () => [...portfolioKeys.all, "list"] as const,
+  list: (filters: Record<string, any>) =>
+    [...portfolioKeys.lists(), filters] as const,
+  details: () => [...portfolioKeys.all, "detail"] as const,
+  detail: (slug: string) => [...portfolioKeys.details(), slug] as const,
+  featured: () => [...portfolioKeys.all, "featured"] as const,
 };
 
-// API functions
+// Fetch functions
 const fetchPortfolios = async (
-  params = {}
+  filters: Record<string, any> = {}
 ): Promise<{ portfolios: IPortfolio[] }> => {
-  const searchParams = new URLSearchParams(params as Record<string, string>);
-  const response = await fetch(`/api/portfolio?${searchParams}`);
+  const searchParams = new URLSearchParams(filters).toString();
+  const response = await fetch(`/api/portfolios?${searchParams}`);
   if (!response.ok) throw new Error("Failed to fetch portfolios");
   return response.json();
 };
@@ -25,29 +25,29 @@ const fetchPortfolios = async (
 const fetchPortfolioBySlug = async (
   slug: string
 ): Promise<{ portfolios: IPortfolio[] }> => {
-  const response = await fetch(`/api/portfolio?slug=${slug}`);
-  if (!response.ok) throw new Error("Failed to fetch Portfolio");
+  const response = await fetch(`/api/portfolios?slug=${slug}`);
+  if (!response.ok) throw new Error("Failed to fetch portfolio");
   return response.json();
 };
 
-const fetchFeaturedportfolios = async (): Promise<{
+const fetchFeaturedPortfolios = async (): Promise<{
   portfolios: IPortfolio[];
 }> => {
-  const response = await fetch("/api/portfolio?featured=true");
+  const response = await fetch("/api/portfolios?featured=true");
   if (!response.ok) throw new Error("Failed to fetch featured portfolios");
   return response.json();
 };
 
 const createPortfolio = async (
-  Portfolio: Omit<IPortfolio, "_id">
+  portfolio: Omit<IPortfolio, "_id">
 ): Promise<IPortfolio> => {
   console.log("at db2 of portfolios");
-  const response = await fetch("/api/portfolio", {
+  const response = await fetch("/api/portfolios", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(Portfolio),
+    body: JSON.stringify(portfolio),
   });
-  if (!response.ok) throw new Error("Failed to create Portfolio");
+  if (!response.ok) throw new Error("Failed to create portfolio");
   return response.json();
 };
 
@@ -58,56 +58,53 @@ const updatePortfolio = async ({
   id: string;
   data: Partial<IPortfolio>;
 }): Promise<IPortfolio> => {
-  const response = await fetch(`/api/portfolio/${id}`, {
+  const response = await fetch(`/api/portfolios/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  if (!response.ok) throw new Error("Failed to update Portfolio");
+  if (!response.ok) throw new Error("Failed to update portfolio");
   return response.json();
 };
 
 const deletePortfolio = async (id: string): Promise<void> => {
-  const response = await fetch(`/api/portfolio/${id}`, { method: "DELETE" });
-  if (!response.ok) throw new Error("Failed to delete Portfolio");
-  return response.json();
+  const response = await fetch(`/api/portfolios/${id}`, { method: "DELETE" });
+  if (!response.ok) throw new Error("Failed to delete portfolio");
 };
 
-// Hooks
+// React Query hooks
 export function usePortfolios(filters = {}) {
   return useQuery({
-    queryKey: PortfolioKeys.list(filters),
+    queryKey: portfolioKeys.list(filters),
     queryFn: () => fetchPortfolios(filters),
-    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    select: (data) => data.portfolios,
   });
 }
 
 export function usePortfolio(slug: string) {
   return useQuery({
-    queryKey: PortfolioKeys.detail(slug),
+    queryKey: portfolioKeys.detail(slug),
     queryFn: () => fetchPortfolioBySlug(slug),
-    enabled: !!slug, // Only run when slug is available
-    staleTime: 1000 * 60 * 10, // Consider data fresh for 10 minutes
+    select: (data) => data.portfolios[0],
   });
 }
 
-export function useFeaturedportfolios() {
+export function useFeaturedPortfolios() {
   return useQuery({
-    queryKey: PortfolioKeys.featured(),
-    queryFn: fetchFeaturedportfolios,
-    staleTime: 1000 * 60 * 30, // Consider data fresh for 30 minutes
+    queryKey: portfolioKeys.featured(),
+    queryFn: fetchFeaturedPortfolios,
+    select: (data) => data.portfolios,
   });
 }
 
 export function useCreatePortfolio() {
-  console.log("at db 1");
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createPortfolio,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PortfolioKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: PortfolioKeys.featured() });
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.featured() });
     },
   });
 }
@@ -117,12 +114,12 @@ export function useUpdatePortfolio() {
 
   return useMutation({
     mutationFn: updatePortfolio,
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: PortfolioKeys.lists() });
+    onSuccess: (_, { data }) => {
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.lists() });
       queryClient.invalidateQueries({
-        queryKey: PortfolioKeys.detail(data._id as string),
+        queryKey: portfolioKeys.detail(data._id as string),
       });
-      queryClient.invalidateQueries({ queryKey: PortfolioKeys.featured() });
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.featured() });
     },
   });
 }
@@ -133,8 +130,8 @@ export function useDeletePortfolio() {
   return useMutation({
     mutationFn: deletePortfolio,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PortfolioKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: PortfolioKeys.featured() });
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: portfolioKeys.featured() });
     },
   });
 }
