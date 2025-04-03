@@ -526,7 +526,7 @@ export default function CompanyAdminPage() {
                         defaultValue={
                           Array.isArray(watch(`team.${index}.skills`))
                             ? watch(`team.${index}.skills`).join(", ")
-                            : ""
+                            : "default"
                         }
                         onChange={(e) => {
                           // Store the raw input value in a data attribute

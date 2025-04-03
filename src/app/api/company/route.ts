@@ -56,14 +56,19 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-
+    console.log(body);
+    const modifiedData = await CompanyInfo.create({
+      ...body,
+      updatedAt: new Date(body.updatedAt),
+    });
     // Basic validation
-    const validationResult = companyInfoSchema.safeParse(body);
+    const validationResult = companyInfoSchema.safeParse(modifiedData);
     if (!validationResult.success) {
       return NextResponse.json(
         {
           error: "Invalid company data",
           details: validationResult.error.flatten(),
+          data: body,
         },
         { status: 400 }
       );
