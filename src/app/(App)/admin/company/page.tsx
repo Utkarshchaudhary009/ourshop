@@ -522,21 +522,46 @@ export default function CompanyAdminPage() {
                       </Label>
                       <Input
                         id={`team.${index}.skills`}
-                        {...register(`team.${index}.skills`)}
                         placeholder='React, TypeScript, Next.js'
+                        defaultValue={
+                          Array.isArray(watch(`team.${index}.skills`))
+                            ? watch(`team.${index}.skills`).join(", ")
+                            : ""
+                        }
                         onChange={(e) => {
-                          const skillsArray = e.target.value
+                          // Store the raw input value in a data attribute
+                          e.currentTarget.dataset.rawValue = e.target.value;
+
+                          // Only parse and set the array when the user has finished typing
+                          // (e.g., when they've added a comma or we're about to blur)
+                          if (
+                            e.target.value.endsWith(",") ||
+                            e.type === "blur"
+                          ) {
+                            const skillsArray = e.target.value
+                              .split(",")
+                              .map((skill) => skill.trim())
+                              .filter(Boolean);
+                            setValue(`team.${index}.skills`, skillsArray);
+                          }
+                        }}
+                        onBlur={(e) => {
+                          // On blur, always parse the current value
+                          const rawValue =
+                            e.currentTarget.dataset.rawValue || e.target.value;
+                          const skillsArray = rawValue
                             .split(",")
                             .map((skill) => skill.trim())
                             .filter(Boolean);
                           setValue(`team.${index}.skills`, skillsArray);
                         }}
-                        value={
-                          Array.isArray(watch(`team.${index}.skills`))
-                            ? watch(`team.${index}.skills`).join(", ")
-                            : ""
-                        }
                       />
+                      {errors.team?.[index]?.skills && (
+                        <p className='text-sm text-red-500'>
+                          {errors.team?.[index]?.skills?.message ||
+                            "Please add at least one skill"}
+                        </p>
+                      )}
                     </div>
 
                     <div className='space-y-2'>
