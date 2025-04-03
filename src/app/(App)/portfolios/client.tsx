@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { IPortfolio } from "@/lib/types";
-import { usePortfolios } from "@/lib/api/services/portfolioservice";
+import { usePortfolios } from "@/lib/api/services/portfolioService";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function portfoliosClient() {
+export default function PortfoliosClient() {
   // Use TanStack Query to fetch portfolios
   const { data, isLoading, error } = usePortfolios();
 
@@ -64,7 +64,7 @@ export default function portfoliosClient() {
     );
   }
 
-  const portfolios = data?.portfolios || [];
+  const portfolios = data || [];
 
   return (
     <main className='container py-24 space-y-8'>

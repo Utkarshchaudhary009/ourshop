@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import portfoliosClient from "./client";
+import PortfoliosClient from "./client";
 import { generateMetadata as getSEOMetadata } from "@/lib/seoUtils";
 
 // Define fallback metadata
@@ -37,6 +37,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return getSEOMetadata("/portfolios", fallbackMetadata);
 }
 
-export default function portfoliosPage() {
-  return <portfoliosClient />;
+export default function PortfoliosPage() {
+  return <PortfoliosClient />;
 }

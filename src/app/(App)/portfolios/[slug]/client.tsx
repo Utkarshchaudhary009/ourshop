@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { usePortfolio } from "@/lib/api/services/portfolioservice";
+import { usePortfolio } from "@/lib/api/services/portfolioService";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

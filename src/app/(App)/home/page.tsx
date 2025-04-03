@@ -1,6 +1,6 @@
 "use client";
 import { usePersonalDetails } from "@/lib/api/services/meService";
-import { useFeaturedportfolios } from "@/lib/api/services/portfolioservice";
+import { useFeaturedPortfolios } from "@/lib/api/services/portfolioService";
 import { useFeaturedBlogs } from "@/lib/api/services/blogService";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
@@ -224,8 +224,8 @@ PortfolioCard.displayName = "PortfolioCard";
 BlogCard.displayName = "BlogCard";
 OptimizedImage.displayName = "OptimizedImage";
 
-// portfoliosSection component to enable code-splitting
-const portfoliosSection = memo(
+// PortfoliosSection component to enable code-splitting
+const PortfoliosSection = memo(
   ({
     featuredportfolios,
     isLoading,
@@ -316,7 +316,7 @@ const BlogsSection = memo(
   }
 );
 
-portfoliosSection.displayName = "portfoliosSection";
+PortfoliosSection.displayName = "PortfoliosSection";
 BlogsSection.displayName = "BlogsSection";
 
 function HomePage() {
@@ -325,14 +325,14 @@ function HomePage() {
     usePersonalDetails();
 
   const { data: featuredportfoliosData, isLoading: isLoadingportfolios } =
-    useFeaturedportfolios();
+    useFeaturedPortfolios();
 
   const { data: featuredBlogsData, isLoading: isLoadingBlogs } =
     useFeaturedBlogs();
 
   // Memoize data derivation to avoid recalculations on re-renders
   const featuredportfolios = useMemo(
-    () => featuredportfoliosData?.portfolios || [],
+    () => featuredportfoliosData || [],
     [featuredportfoliosData]
   );
 
@@ -379,7 +379,7 @@ function HomePage() {
             </div>
           }
         >
-          <portfoliosSection
+          <PortfoliosSection
             featuredportfolios={featuredportfolios}
             isLoading={isLoadingportfolios}
           />

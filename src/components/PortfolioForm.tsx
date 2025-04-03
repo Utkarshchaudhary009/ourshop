@@ -22,7 +22,7 @@ import { DialogFooter } from "@/components/ui/dialog";
 import {
   useCreatePortfolio,
   useUpdatePortfolio,
-} from "@/lib/api/services/portfolioservice";
+} from "@/lib/api/services/portfolioService";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 

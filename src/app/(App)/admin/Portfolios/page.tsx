@@ -73,7 +73,7 @@ export default function AdminportfoliosPage() {
   // Extract unique categories and technologies before any conditionals
   const categories = [
     ...new Set(
-      (data?.portfolios || [])
+      (data || [])
         .map((p: IPortfolio) => p.category)
         .filter(Boolean)
     ),
@@ -81,7 +81,7 @@ export default function AdminportfoliosPage() {
 
   const technologies = [
     ...new Set(
-      (data?.portfolios || [])
+      (data || [])
         .flatMap((p: IPortfolio) => p.technologies || [])
         .filter(Boolean)
     ),
@@ -384,7 +384,7 @@ export default function AdminportfoliosPage() {
                     </TableRow>
                   ))}
                 </>
-              ) : data?.portfolios?.length === 0 ? (
+              ) : data?.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={4}
@@ -394,7 +394,7 @@ export default function AdminportfoliosPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                data?.portfolios?.map((Portfolio: IPortfolio) => (
+                data?.map((Portfolio: IPortfolio) => (
                   <TableRow key={Portfolio._id}>
                     <TableCell className='font-medium'>
                       {Portfolio.title}
