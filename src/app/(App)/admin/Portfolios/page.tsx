@@ -72,11 +72,7 @@ export default function AdminportfoliosPage() {
 
   // Extract unique categories and technologies before any conditionals
   const categories = [
-    ...new Set(
-      (data || [])
-        .map((p: IPortfolio) => p.category)
-        .filter(Boolean)
-    ),
+    ...new Set((data || []).map((p: IPortfolio) => p.category).filter(Boolean)),
   ] as string[];
 
   const technologies = [
@@ -142,7 +138,7 @@ export default function AdminportfoliosPage() {
         onSuccess: () => {
           toast.success("Portfolio deleted successfully");
         },
-        onError: (error) => {
+        onError: (error: Error) => {
           toast.error("Failed to delete Portfolio");
           console.error("Delete error:", error);
         },
@@ -165,7 +161,7 @@ export default function AdminportfoliosPage() {
               } featured`
             );
           },
-          onError: (error) => {
+          onError: (error: Error) => {
             toast.error("Failed to update featured status");
             console.error("Update error:", error);
           },

@@ -16,7 +16,7 @@ export default function ClientPortfolioDetail() {
   const { slug } = useParams();
   // Use TanStack Query to fetch the Portfolio
   const { data, isLoading, error } = usePortfolio(slug as string);
-  const Portfolio = data?.portfolios?.[0] || null;
+  const Portfolio = data || null;
 
   if (isLoading) {
     return (
@@ -70,7 +70,7 @@ export default function ClientPortfolioDetail() {
     );
   }
 
-  if (error) {
+  if (error as Error) {
     return (
       <div className='container py-8'>
         <h1 className='text-2xl font-bold mb-4'>Error</h1>

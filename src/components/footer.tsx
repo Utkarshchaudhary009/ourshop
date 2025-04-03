@@ -1,6 +1,6 @@
 "use client";
 
-import { usePersonalDetails } from "@/lib/api/services/meService";
+import { useCompanyInfo } from "@/lib/api/services/companyService";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
@@ -13,6 +13,7 @@ import {
   Github as GithubIcon,
 } from "lucide-react";
 import { memo } from "react";
+import { ISocialLink } from "@/lib/types";
 
 const quickLinks = [
   { name: "Home", path: "/home" },
@@ -79,8 +80,7 @@ const CopyrightSection = memo(function CopyrightSection() {
 });
 
 function Footer() {
-  // Using TanStack Query without passing parameters - staleTime is already defined in the hook
-  const { data: personalDetails, isLoading } = usePersonalDetails();
+  const { data: companyInfo, isLoading } = useCompanyInfo();
 
   return (
     <footer className='border-t border-border/40 bg-background/50 backdrop-blur-sm py-12 text-sm text-muted-foreground'>
@@ -94,16 +94,16 @@ function Footer() {
                 <Skeleton className='h-4 w-full max-w-md mb-1' />
                 <Skeleton className='h-4 w-3/4 max-w-sm' />
               </>
-            ) : personalDetails ? (
+            ) : companyInfo ? (
               <>
-                {personalDetails.name && (
+                {companyInfo.company_name && (
                   <h3 className='font-bold text-lg bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent'>
-                    {personalDetails.name}
+                    {companyInfo.company_name}
                   </h3>
                 )}
-                {personalDetails.bio && (
+                {companyInfo.description && (
                   <p className='text-sm leading-relaxed max-w-md'>
-                    {personalDetails.bio}
+                    {companyInfo.description}
                   </p>
                 )}
               </>
@@ -138,10 +138,10 @@ function Footer() {
                   <Skeleton className='h-6 w-40 mb-2' />
                   <Skeleton className='h-6 w-36' />
                 </>
-              ) : personalDetails?.socialLinks &&
-                personalDetails.socialLinks.length > 0 ? (
+              ) : companyInfo?.socialLinks &&
+                companyInfo.socialLinks.length > 0 ? (
                 <div className='flex flex-wrap gap-3'>
-                  {personalDetails.socialLinks.map((link) => (
+                  {companyInfo.socialLinks.map((link: ISocialLink) => (
                     <motion.div
                       key={link.url}
                       whileHover={{ scale: 1.05 }}

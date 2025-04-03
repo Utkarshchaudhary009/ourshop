@@ -51,7 +51,7 @@ export default function PortfoliosClient() {
     );
   }
 
-  if (error) {
+  if (error as Error) {
     return (
       <main className='container py-24 space-y-8'>
         <div className='flex flex-col items-center text-center space-y-4'>
