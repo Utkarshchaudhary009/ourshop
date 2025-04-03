@@ -7,12 +7,12 @@ import { getAuth } from "@clerk/nextjs/server";
 // Get a single service by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const service = await Service.findById(params.id);
+    const service = await Service.findById((await params).id);
     if (!service) {
       return NextResponse.json({ error: "Service not found" }, { status: 404 });
     }
@@ -30,7 +30,7 @@ export async function GET(
 // Update service by ID
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = getAuth(request);
@@ -61,7 +61,7 @@ export async function PUT(
     await connectDB();
 
     const updatedService = await Service.findByIdAndUpdate(
-      params.id,
+      (await params).id,
       {
         ...body,
         updatedAt: new Date(),
@@ -86,7 +86,7 @@ export async function PUT(
 // Delete service by ID
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = getAuth(request);
@@ -98,7 +98,7 @@ export async function DELETE(
 
     await connectDB();
 
-    const deletedService = await Service.findByIdAndDelete(params.id);
+    const deletedService = await Service.findByIdAndDelete((await params).id);
 
     if (!deletedService) {
       return NextResponse.json({ error: "Service not found" }, { status: 404 });
