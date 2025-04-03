@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { IPortfolio } from "@/lib/types";
-import { usePortfolios } from "@/lib/api/services/PortfolioService";
+import { usePortfolios } from "@/lib/api/services/portfolioservice";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function PortfoliosClient() {
-  // Use TanStack Query to fetch Portfolios
+export default function portfoliosClient() {
+  // Use TanStack Query to fetch portfolios
   const { data, isLoading, error } = usePortfolios();
 
   if (isLoading) {
@@ -55,29 +55,29 @@ export default function PortfoliosClient() {
     return (
       <main className='container py-24 space-y-8'>
         <div className='flex flex-col items-center text-center space-y-4'>
-          <h1 className='text-4xl font-bold'>My Portfolios</h1>
+          <h1 className='text-4xl font-bold'>My portfolios</h1>
           <p className='text-xl text-red-500'>
-            Error loading Portfolios. Please try again later.
+            Error loading portfolios. Please try again later.
           </p>
         </div>
       </main>
     );
   }
 
-  const Portfolios = data?.Portfolios || [];
+  const portfolios = data?.portfolios || [];
 
   return (
     <main className='container py-24 space-y-8'>
       <div className='flex flex-col items-center text-center space-y-4'>
-        <h1 className='text-4xl font-bold'>My Portfolios</h1>
+        <h1 className='text-4xl font-bold'>My portfolios</h1>
         <p className='text-xl text-muted-foreground max-w-2xl'>
-          A collection of Portfolios I{"'"}ve worked on, from web applications
+          A collection of portfolios I{"'"}ve worked on, from web applications
           to AI experiments
         </p>
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {Portfolios.map((Portfolio: IPortfolio) => (
+        {portfolios.map((Portfolio: IPortfolio) => (
           <Card
             key={Portfolio.slug}
             className='overflow-hidden'
@@ -113,7 +113,7 @@ export default function PortfoliosClient() {
             <CardFooter className='p-6 pt-0'>
               <Button asChild>
                 <Link
-                  href={`/Portfolios/${Portfolio.slug}`}
+                  href={`/portfolios/${Portfolio.slug}`}
                   aria-label={Portfolio.title}
                 >
                   View Portfolio

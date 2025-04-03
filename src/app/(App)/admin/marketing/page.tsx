@@ -38,7 +38,7 @@ interface ContentItem {
 
 interface MarketingContent {
   blogs: ContentItem[];
-  Portfolios: ContentItem[];
+  portfolios: ContentItem[];
 }
 
 interface MarketingMail {
@@ -103,7 +103,7 @@ export default function MarketingPage() {
     await fetchMarketingContent();
   };
 
-  // Fetch marketing content (blogs and Portfolios)
+  // Fetch marketing content (blogs and portfolios)
   const fetchMarketingContent = async () => {
     try {
       setContentLoading(true);
@@ -247,7 +247,7 @@ export default function MarketingPage() {
           <h1 className='text-2xl font-bold'>Marketing Email Subscribers</h1>
           <p className='text-muted-foreground'>
             Manage subscribers and send updates about new blog posts and
-            Portfolios.
+            portfolios.
           </p>
         </div>
 
@@ -376,7 +376,7 @@ export default function MarketingPage() {
             >
               <TabsList className='grid w-full grid-cols-2'>
                 <TabsTrigger value='blog'>Blog Posts</TabsTrigger>
-                <TabsTrigger value='Portfolio'>Portfolios</TabsTrigger>
+                <TabsTrigger value='Portfolio'>portfolios</TabsTrigger>
               </TabsList>
 
               <div className='mt-4 relative'>
@@ -433,9 +433,9 @@ export default function MarketingPage() {
                   className='space-y-2'
                 >
                   {!marketingContent ||
-                  marketingContent.Portfolios.length === 0 ? (
+                  marketingContent.portfolios.length === 0 ? (
                     <div className='text-center py-8 text-muted-foreground'>
-                      No Portfolios found
+                      No portfolios found
                       <Button
                         variant='ghost'
                         size='sm'
@@ -448,7 +448,7 @@ export default function MarketingPage() {
                     </div>
                   ) : (
                     <div className='space-y-2 max-h-[300px] overflow-y-auto pr-2'>
-                      {marketingContent.Portfolios.map((Portfolio) => (
+                      {marketingContent.portfolios.map((Portfolio) => (
                         <div
                           key={Portfolio._id}
                           className={`p-3 border rounded-md cursor-pointer transition-colors ${

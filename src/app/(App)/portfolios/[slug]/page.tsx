@@ -5,7 +5,7 @@ import ClientPortfolioDetail from "./client";
 async function getPortfolioData(slug: string) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/Portfolios?slug=${slug}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/portfolio?slug=${slug}`,
       {
         next: { revalidate: 3600 }, // Cache for 1 hour
       }
@@ -14,7 +14,7 @@ async function getPortfolioData(slug: string) {
     if (!response.ok) return null;
 
     const data = await response.json();
-    return data.Portfolios?.[0] || null;
+    return data.portfolios?.[0] || null;
   } catch (error) {
     console.error("Error fetching Portfolio data for metadata:", error);
     return null;
@@ -35,7 +35,7 @@ export async function generateMetadata(
 
   // Get parent metadata (from layout)
   const previousImages = (await parent).openGraph?.images || [];
-  const previousTitle = (await parent).title || "Portfolios";
+  const previousTitle = (await parent).title || "portfolios";
 
   // Default metadata if Portfolio not found
   if (!Portfolio) {
@@ -47,7 +47,7 @@ export async function generateMetadata(
 
   // Build metadata based on Portfolio content
   return {
-    title: `${Portfolio.title} | Portfolios`,
+    title: `${Portfolio.title} | portfolios`,
     description:
       Portfolio.excerpt || `Learn more about my Portfolio: ${Portfolio.title}`,
     keywords: Portfolio.technologies?.join(", ") || "",

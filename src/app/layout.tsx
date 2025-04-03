@@ -29,7 +29,7 @@ const APP_TITLE = {
 };
 const AUTHOR_NAME = "OurShop";
 const APP_DESCRIPTION =
-  "This website showcases my work and Portfolios that delivers high quality content. I also write blogs on my learnings and experiences.";
+  "This website showcases my work and portfolios that delivers high quality content. I also write blogs on my learnings and experiences.";
 
 const APP_URL = "https://utkarshchaudhary.space";
 
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
     "Software Engineer",
     "Web Developer",
     "Blog",
-    "Portfolios",
+    "portfolios",
   ],
   authors: [{ name: AUTHOR_NAME, url: APP_URL }],
   robots: {

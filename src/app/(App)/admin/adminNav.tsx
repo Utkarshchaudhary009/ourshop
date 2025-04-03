@@ -30,8 +30,8 @@ export default function AdminNav() {
       href: "/admin/users",
     },
     {
-      title: "Portfolios",
-      description: "Manage your Portfolios and showcase",
+      title: "portfolios",
+      description: "Manage your portfolios and showcase",
       icon: <Layers className='h-8 w-8' />,
       href: "/admin/portfolios",
     },
@@ -64,6 +64,18 @@ export default function AdminNav() {
       description: "Manage your about me page",
       icon: <User className='h-8 w-8' />,
       href: "/admin/me",
+    },
+    {
+      title: "Services",
+      description: "Manage your services",
+      icon: <User className='h-8 w-8' />,
+      href: "/admin/services",
+    },
+    {
+      title: "Ads",
+      description: "Manage your ads",
+      icon: <User className='h-8 w-8' />,
+      href: "/admin/ads",
     },
   ];
 

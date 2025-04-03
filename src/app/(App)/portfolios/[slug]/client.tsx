@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { usePortfolio } from "@/lib/api/services/PortfolioService";
+import { usePortfolio } from "@/lib/api/services/portfolioservice";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,7 +16,7 @@ export default function ClientPortfolioDetail() {
   const { slug } = useParams();
   // Use TanStack Query to fetch the Portfolio
   const { data, isLoading, error } = usePortfolio(slug as string);
-  const Portfolio = data?.Portfolios?.[0] || null;
+  const Portfolio = data?.portfolios?.[0] || null;
 
   if (isLoading) {
     return (
@@ -82,10 +82,10 @@ export default function ClientPortfolioDetail() {
           className='mt-4'
         >
           <Link
-            href='/Portfolios'
-            aria-label='Back to Portfolios'
+            href='/portfolios'
+            aria-label='Back to portfolios'
           >
-            Back to Portfolios
+            Back to portfolios
           </Link>
         </Button>
       </div>
@@ -98,7 +98,7 @@ export default function ClientPortfolioDetail() {
         <h1 className='text-4xl font-bold'>{Portfolio?.title}</h1>
 
         <SocialShareList
-          url={`${process.env.NEXT_PUBLIC_BASE_URL}/Portfolios/${Portfolio?.slug}`}
+          url={`${process.env.NEXT_PUBLIC_BASE_URL}/portfolios/${Portfolio?.slug}`}
           title={Portfolio?.title || ""}
           className='right-1 my-2 md:my-0'
           description={Portfolio?.excerpt || ""}
@@ -203,10 +203,10 @@ export default function ClientPortfolioDetail() {
         asChild
       >
         <Link
-          href='/Portfolios'
-          aria-label='Back to Portfolios'
+          href='/portfolios'
+          aria-label='Back to portfolios'
         >
-          Back to Portfolios
+          Back to portfolios
         </Link>
       </Button>
     </div>

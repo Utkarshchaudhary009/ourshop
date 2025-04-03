@@ -17,7 +17,7 @@ The TanStack Query implementation is used throughout the Portfolio to efficientl
 
 API services are organized in `src/lib/api/services/` with separate modules for each entity:
 
-- `PortfolioService.ts`: Manages Portfolio-related API calls (fetch, create, update, delete)
+- `portfolioservice.ts`: Manages Portfolio-related API calls (fetch, create, update, delete)
 - Additional service modules can be added for other entities
 
 ### Key Features

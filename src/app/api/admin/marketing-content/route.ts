@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     await connectDB();
 
     let blogs = [];
-    let Portfolios = [];
+    let portfolios = [];
 
     // Fetch data based on content type
     if (contentType === "all" || contentType === "blog") {
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (contentType === "all" || contentType === "Portfolio") {
-      Portfolios = await Portfolio.find({
+      portfolios = await Portfolio.find({
         status: { $in: ["in-progress", "completed"] },
       })
         .sort({ updatedAt: -1 })
@@ -50,12 +50,12 @@ export async function GET(request: NextRequest) {
         excerpt: blog.excerpt,
         date: blog.publishedAt,
       })),
-      portfolios: Portfolios.map((portfolio) => ({
+      portfolios: portfolios.map((portfolio) => ({
         _id: portfolio._id,
         title: portfolio.title,
         slug: portfolio.slug,
         description: portfolio.description,
-        date:portfolio.updatedAt,
+        date: portfolio.updatedAt,
       })),
     };
 

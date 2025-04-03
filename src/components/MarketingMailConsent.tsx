@@ -107,7 +107,7 @@ export default function MarketingMailConsent() {
                 Stay Updated
               </h3>
               <p className='text-gray-600 dark:text-gray-300 text-sm md:text-base'>
-                Stay in the loop with our latest blog posts and Portfolios!
+                Stay in the loop with our latest blog posts and portfolios!
                 We&apos;ll only send you updates you&apos;ll love—no clutter,
                 just the good stuff.
               </p>

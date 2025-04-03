@@ -274,39 +274,18 @@ const MarketingMailSchema = new mongoose.Schema<IMarketingMail>({
 
 // Service Schema
 const ServiceSchema = new mongoose.Schema<IService>({
-  name: { 
-    type: String, 
-    required: true,
-    minlength: [3, "Name must be at least 3 characters"] 
-  },
-  description: { 
-    type: String, 
-    required: true,
-    minlength: [10, "Description must be at least 10 characters"] 
-  },
-  image: { 
-    type: String, 
-    required: true,
-    default: DEFAULT_IMG 
-  },
-  price: { 
-    type: Number, 
-    required: true,
-    min: [0, "Price cannot be negative"] 
-  },
-  featured: { 
-    type: Boolean, 
-    default: false 
-  },
-  category: { 
-    type: String 
-  },
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true, min: 0 },
+  image: { type: String, default: DEFAULT_IMG },
+  featured: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
 
-// Add index for performance
-ServiceSchema.index({ category: 1, featured: -1 });
+// Add indexes for services
+ServiceSchema.index({ name: 1 });
+ServiceSchema.index({ featured: 1 });
 
 // Export models
 export const Portfolio =

@@ -5,7 +5,7 @@ import {
   usePortfolios,
   useDeletePortfolio,
   useUpdatePortfolio,
-} from "@/lib/api/services/PortfolioService";
+} from "@/lib/api/services/portfolioservice";
 import { IPortfolio, PortfolioFormData } from "@/lib/types";
 import {
   Table,
@@ -48,7 +48,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function AdminPortfoliosPage() {
+export default function AdminportfoliosPage() {
   // State declarations - all grouped together
   const [filters, setFilters] = useState({
     status: "all",
@@ -73,7 +73,7 @@ export default function AdminPortfoliosPage() {
   // Extract unique categories and technologies before any conditionals
   const categories = [
     ...new Set(
-      (data?.Portfolios || [])
+      (data?.portfolios || [])
         .map((p: IPortfolio) => p.category)
         .filter(Boolean)
     ),
@@ -81,7 +81,7 @@ export default function AdminPortfoliosPage() {
 
   const technologies = [
     ...new Set(
-      (data?.Portfolios || [])
+      (data?.portfolios || [])
         .flatMap((p: IPortfolio) => p.technologies || [])
         .filter(Boolean)
     ),
@@ -179,7 +179,7 @@ export default function AdminPortfoliosPage() {
       <Card className='m-4'>
         <CardContent className='p-6'>
           <div className='text-center text-red-500'>
-            Error loading Portfolios. Please try again later.
+            Error loading portfolios. Please try again later.
           </div>
         </CardContent>
       </Card>
@@ -189,7 +189,7 @@ export default function AdminPortfoliosPage() {
   return (
     <div className='p-4 space-y-4'>
       <div className='flex justify-between items-center'>
-        <h1 className='text-2xl font-bold'>Portfolios</h1>
+        <h1 className='text-2xl font-bold'>portfolios</h1>
         <div className='flex gap-2'>
           <Dialog
             open={isAIDialogOpen}
@@ -352,7 +352,7 @@ export default function AdminPortfoliosPage() {
         </CardContent>
       </Card>
 
-      {/* Portfolios Table */}
+      {/* portfolios Table */}
       <Card>
         <CardContent className='p-0'>
           <Table>
@@ -384,17 +384,17 @@ export default function AdminPortfoliosPage() {
                     </TableRow>
                   ))}
                 </>
-              ) : data?.Portfolios?.length === 0 ? (
+              ) : data?.portfolios?.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={4}
                     className='text-center'
                   >
-                    No Portfolios found
+                    No portfolios found
                   </TableCell>
                 </TableRow>
               ) : (
-                data?.Portfolios?.map((Portfolio: IPortfolio) => (
+                data?.portfolios?.map((Portfolio: IPortfolio) => (
                   <TableRow key={Portfolio._id}>
                     <TableCell className='font-medium'>
                       {Portfolio.title}

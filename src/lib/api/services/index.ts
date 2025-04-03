@@ -8,5 +8,5 @@ export * from "./PortfolioService";
 export * from "./blogService";
 export * from "./contactService";
 export * from "./adService";
-export * from "./meService";
+export * from "./serviceService";
 // Add more service exports here

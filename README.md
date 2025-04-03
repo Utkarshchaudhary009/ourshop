@@ -12,7 +12,7 @@ A modern, full-featured portfolio and blog platform built with Next.js 14, featu
 
 ## ✨ Features
 
-- **Dynamic Portfolio** - Showcase your Portfolios with rich media support
+- **Dynamic Portfolio** - Showcase your portfolios with rich media support
 - **Blog Platform** - Share your insights with a full-featured blog
 - **Admin Dashboard** - Manage content through an intuitive interface
 - **Authentication** - Secure user login with Clerk
@@ -104,7 +104,7 @@ src/
 ## 📱 Pages & Features
 
 - **Home** - Introduction and featured content
-- **Portfolios** - Portfolio showcasing your work
+- **portfolios** - Portfolio showcasing your work
 - **Blog** - Articles and content publishing
 - **About** - Professional details and history
 - **Contact** - Get in touch form
@@ -123,7 +123,7 @@ This Portfolio uses Clerk for authentication, providing:
 
 The admin area allows for:
 
-- Managing portfolio Portfolios
+- Managing portfolio portfolios
 - Publishing and editing blog posts
 - Viewing and responding to contact messages
 - User management

@@ -27,7 +27,8 @@ interface NavbarProps {
 const navItems = [
   { name: "Home", path: "/home" },
   { name: "About", path: "/about" },
-  { name: "Portfolios", path: "/portfolios" },
+  { name: "Services", path: "/services" },
+  { name: "portfolios", path: "/portfolios" },
   { name: "Blog", path: "/blog" },
   { name: "Contact", path: "/contact" },
 ];

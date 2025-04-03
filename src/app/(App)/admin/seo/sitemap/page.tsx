@@ -328,7 +328,7 @@ export default function SitemapConfigPage() {
               <div className='space-y-2 text-muted-foreground'>
                 <p>
                   <strong>Automatic entries:</strong> Your sitemap will
-                  automatically include blog posts and Portfolios from your
+                  automatically include blog posts and portfolios from your
                   database.
                 </p>
                 <p>

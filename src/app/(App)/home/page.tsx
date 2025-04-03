@@ -1,6 +1,6 @@
 "use client";
 import { usePersonalDetails } from "@/lib/api/services/meService";
-import { useFeaturedPortfolios } from "@/lib/api/services/PortfolioService";
+import { useFeaturedportfolios } from "@/lib/api/services/portfolioservice";
 import { useFeaturedBlogs } from "@/lib/api/services/blogService";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
@@ -52,10 +52,10 @@ const HeroSection = memo(
               <div className='flex flex-wrap gap-3'>
                 <Button asChild>
                   <Link
-                    href='/Portfolios'
-                    aria-label='View Portfolios'
+                    href='/portfolios'
+                    aria-label='View portfolios'
                   >
-                    View Portfolios
+                    View portfolios
                   </Link>
                 </Button>
                 <Button
@@ -168,7 +168,7 @@ const PortfolioCard = memo(({ Portfolio }: { Portfolio: IPortfolio }) => {
       <CardFooter className='mt-auto'>
         <Button asChild>
           <Link
-            href={`/Portfolios/${Portfolio.slug}`}
+            href={`/portfolios/${Portfolio.slug}`}
             aria-label={Portfolio.title}
           >
             View Details
@@ -224,13 +224,13 @@ PortfolioCard.displayName = "PortfolioCard";
 BlogCard.displayName = "BlogCard";
 OptimizedImage.displayName = "OptimizedImage";
 
-// PortfoliosSection component to enable code-splitting
-const PortfoliosSection = memo(
+// portfoliosSection component to enable code-splitting
+const portfoliosSection = memo(
   ({
-    featuredPortfolios,
+    featuredportfolios,
     isLoading,
   }: {
-    featuredPortfolios: IPortfolio[];
+    featuredportfolios: IPortfolio[];
     isLoading: boolean;
   }) => {
     if (isLoading) {
@@ -248,11 +248,11 @@ const PortfoliosSection = memo(
       );
     }
 
-    if (featuredPortfolios.length === 0) {
+    if (featuredportfolios.length === 0) {
       return (
         <Card className='p-6 text-center'>
           <p className='text-muted-foreground'>
-            No featured Portfolios available
+            No featured portfolios available
           </p>
         </Card>
       );
@@ -260,7 +260,7 @@ const PortfoliosSection = memo(
 
     return (
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-        {featuredPortfolios.map((Portfolio) => (
+        {featuredportfolios.map((Portfolio) => (
           <PortfolioCard
             key={Portfolio._id}
             Portfolio={Portfolio}
@@ -316,7 +316,7 @@ const BlogsSection = memo(
   }
 );
 
-PortfoliosSection.displayName = "PortfoliosSection";
+portfoliosSection.displayName = "portfoliosSection";
 BlogsSection.displayName = "BlogsSection";
 
 function HomePage() {
@@ -324,16 +324,16 @@ function HomePage() {
   const { data: personalDetails, isLoading: isLoadingDetails } =
     usePersonalDetails();
 
-  const { data: featuredPortfoliosData, isLoading: isLoadingPortfolios } =
-    useFeaturedPortfolios();
+  const { data: featuredportfoliosData, isLoading: isLoadingportfolios } =
+    useFeaturedportfolios();
 
   const { data: featuredBlogsData, isLoading: isLoadingBlogs } =
     useFeaturedBlogs();
 
   // Memoize data derivation to avoid recalculations on re-renders
-  const featuredPortfolios = useMemo(
-    () => featuredPortfoliosData?.Portfolios || [],
-    [featuredPortfoliosData]
+  const featuredportfolios = useMemo(
+    () => featuredportfoliosData?.portfolios || [],
+    [featuredportfoliosData]
   );
 
   // Handle both array and object formats for blogs
@@ -350,17 +350,17 @@ function HomePage() {
         isLoading={isLoadingDetails}
       />
 
-      {/* Featured Portfolios Section */}
+      {/* Featured portfolios Section */}
       <section className='space-y-6'>
         <div className='flex justify-between items-center'>
-          <h2 className='text-3xl font-bold'>Featured Portfolios</h2>
+          <h2 className='text-3xl font-bold'>Featured portfolios</h2>
           <Button
             variant='outline'
             asChild
           >
             <Link
-              href='/Portfolios'
-              aria-label='View All Portfolios'
+              href='/portfolios'
+              aria-label='View All portfolios'
             >
               View All
             </Link>
@@ -379,9 +379,9 @@ function HomePage() {
             </div>
           }
         >
-          <PortfoliosSection
-            featuredPortfolios={featuredPortfolios}
-            isLoading={isLoadingPortfolios}
+          <portfoliosSection
+            featuredportfolios={featuredportfolios}
+            isLoading={isLoadingportfolios}
           />
         </Suspense>
       </section>

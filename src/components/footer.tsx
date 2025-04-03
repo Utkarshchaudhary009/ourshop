@@ -17,7 +17,7 @@ import { memo } from "react";
 const quickLinks = [
   { name: "Home", path: "/home" },
   { name: "About", path: "/about" },
-  { name: "Portfolios", path: "/Portfolios" },
+  { name: "portfolios", path: "/portfolios" },
   { name: "Blog", path: "/blog" },
   { name: "Contact", path: "/contact" },
 ];

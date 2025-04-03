@@ -3,7 +3,7 @@ import { IPortfolio } from "@/lib/types";
 
 // Query keys
 export const PortfolioKeys = {
-  all: ["Portfolios"] as const,
+  all: ["portfolios"] as const,
   lists: () => [...PortfolioKeys.all, "list"] as const,
   list: (filters: Record<string, string> = {}) =>
     [...PortfolioKeys.lists(), filters] as const,
@@ -15,34 +15,34 @@ export const PortfolioKeys = {
 // API functions
 const fetchPortfolios = async (
   params = {}
-): Promise<{ Portfolios: IPortfolio[] }> => {
+): Promise<{ portfolios: IPortfolio[] }> => {
   const searchParams = new URLSearchParams(params as Record<string, string>);
-  const response = await fetch(`/api/Portfolios?${searchParams}`);
-  if (!response.ok) throw new Error("Failed to fetch Portfolios");
+  const response = await fetch(`/api/portfolio?${searchParams}`);
+  if (!response.ok) throw new Error("Failed to fetch portfolios");
   return response.json();
 };
 
 const fetchPortfolioBySlug = async (
   slug: string
-): Promise<{ Portfolios: IPortfolio[] }> => {
-  const response = await fetch(`/api/Portfolios?slug=${slug}`);
+): Promise<{ portfolios: IPortfolio[] }> => {
+  const response = await fetch(`/api/portfolio?slug=${slug}`);
   if (!response.ok) throw new Error("Failed to fetch Portfolio");
   return response.json();
 };
 
-const fetchFeaturedPortfolios = async (): Promise<{
-  Portfolios: IPortfolio[];
+const fetchFeaturedportfolios = async (): Promise<{
+  portfolios: IPortfolio[];
 }> => {
-  const response = await fetch("/api/Portfolios?featured=true");
-  if (!response.ok) throw new Error("Failed to fetch featured Portfolios");
+  const response = await fetch("/api/portfolio?featured=true");
+  if (!response.ok) throw new Error("Failed to fetch featured portfolios");
   return response.json();
 };
 
 const createPortfolio = async (
   Portfolio: Omit<IPortfolio, "_id">
 ): Promise<IPortfolio> => {
-  console.log("at db2 of Portfolios");
-  const response = await fetch("/api/Portfolios", {
+  console.log("at db2 of portfolios");
+  const response = await fetch("/api/portfolio", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(Portfolio),
@@ -58,7 +58,7 @@ const updatePortfolio = async ({
   id: string;
   data: Partial<IPortfolio>;
 }): Promise<IPortfolio> => {
-  const response = await fetch(`/api/Portfolios/${id}`, {
+  const response = await fetch(`/api/portfolio/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -68,7 +68,7 @@ const updatePortfolio = async ({
 };
 
 const deletePortfolio = async (id: string): Promise<void> => {
-  const response = await fetch(`/api/Portfolios/${id}`, { method: "DELETE" });
+  const response = await fetch(`/api/portfolio/${id}`, { method: "DELETE" });
   if (!response.ok) throw new Error("Failed to delete Portfolio");
   return response.json();
 };
@@ -91,10 +91,10 @@ export function usePortfolio(slug: string) {
   });
 }
 
-export function useFeaturedPortfolios() {
+export function useFeaturedportfolios() {
   return useQuery({
     queryKey: PortfolioKeys.featured(),
-    queryFn: fetchFeaturedPortfolios,
+    queryFn: fetchFeaturedportfolios,
     staleTime: 1000 * 60 * 30, // Consider data fresh for 30 minutes
   });
 }

@@ -132,7 +132,7 @@ export default function UnsubscribePage({
           <CardContent className='text-center'>
             <p className='text-muted-foreground'>
               You&apos;ll now receive updates about new blog posts and
-              Portfolios at {userEmail}.
+              portfolios at {userEmail}.
             </p>
           </CardContent>
           <CardFooter className='flex justify-center'>

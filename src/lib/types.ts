@@ -154,7 +154,7 @@ export const SEOSchema = z.object({
   structuredData: z.record(z.string(), z.unknown()).optional(),
 });
 
-export const PortfolioSchema = z.object({
+export const portfolioschema = z.object({
   _id: z.string().optional(),
   title: z.string().min(3, "Title must be at least 3 characters"),
   slug: z.string().min(3, "Slug must be at least 3 characters"),
@@ -180,15 +180,17 @@ export const PortfolioSchema = z.object({
   updatedAt: z.date().optional(),
 });
 
-export const PortfolioRequestSchema = PortfolioSchema.omit({
-  aiGenerated: true,
-  embeddings: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
-  startDate: z.string().optional().nullable(),
-  endDate: z.string().optional().nullable(),
-});
+export const PortfolioRequestSchema = portfolioschema
+  .omit({
+    aiGenerated: true,
+    embeddings: true,
+    createdAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    startDate: z.string().optional().nullable(),
+    endDate: z.string().optional().nullable(),
+  });
 
 export const BlogSchema = z.object({
   _id: z.string().optional(),
@@ -371,10 +373,9 @@ export interface IService {
   _id?: string;
   name: string;
   description: string;
-  image: string;
   price: number;
+  image: string;
   featured: boolean;
-  category?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -382,11 +383,10 @@ export interface IService {
 export const ServiceSchema = z.object({
   _id: z.string().optional(),
   name: z.string().min(3, "Name must be at least 3 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  description: z.string().min(20, "Description must be at least 20 characters"),
+  price: z.number().min(0, "Price must be a positive number"),
   image: z.string().url("Image must be a valid URL"),
-  price: z.number().min(0, "Price cannot be negative"),
   featured: z.boolean().default(false),
-  category: z.string().optional(),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
@@ -396,3 +396,6 @@ export const ServiceRequestSchema = ServiceSchema.omit({
   createdAt: true,
   updatedAt: true,
 });
+
+// Add ServiceFormData type
+export type ServiceFormData = Omit<IService, "_id" | "createdAt" | "updatedAt">;

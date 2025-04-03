@@ -22,7 +22,7 @@ import { DialogFooter } from "@/components/ui/dialog";
 import {
   useCreatePortfolio,
   useUpdatePortfolio,
-} from "@/lib/api/services/PortfolioService";
+} from "@/lib/api/services/portfolioservice";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 
@@ -243,7 +243,7 @@ const PortfolioForm = ({
         aiGenerated: false,
       };
       console.log("Data to save:", dataToSave);
-      // Use different keys for new and existing Portfolios
+      // Use different keys for new and existing portfolios
       const storageKey = initialData?._id
         ? `${LOCAL_STORAGE_KEY}_${initialData._id}`
         : LOCAL_STORAGE_KEY_NEW;
@@ -298,7 +298,7 @@ const PortfolioForm = ({
           setHasUnsavedChanges(false);
           onOpenChange(newOpen);
           reset();
-          // Clear localStorage for new Portfolios when closing without saving
+          // Clear localStorage for new portfolios when closing without saving
           if (!initialData?._id) {
             localStorage.removeItem(LOCAL_STORAGE_KEY_NEW);
           }
@@ -332,7 +332,7 @@ const PortfolioForm = ({
           return;
         }
 
-        // Check if slug is unique for new Portfolios
+        // Check if slug is unique for new portfolios
         if (!initialData?._id) {
           const isSlugValid = await validateSlug();
           if (!isSlugValid) {
@@ -393,7 +393,7 @@ const PortfolioForm = ({
             console.log("Create Portfolio result:", result);
             toast.success("Portfolio created successfully");
 
-            // Clear general localStorage for new Portfolios
+            // Clear general localStorage for new portfolios
             localStorage.removeItem(LOCAL_STORAGE_KEY_NEW);
           } catch (mutationError: unknown) {
             console.error("Mutation error details:", mutationError);
@@ -556,11 +556,11 @@ const PortfolioForm = ({
 
     try {
       // Check if a Portfolio with this slug already exists
-      const response = await fetch(`/api/Portfolios?slug=${currentSlug}`);
+      const response = await fetch(`/api/portfolio?slug=${currentSlug}`);
       const data = await response.json();
 
       // If the API returns a Portfolio, the slug is already in use
-      if (response.ok && data.Portfolios && data.Portfolios.length > 0) {
+      if (response.ok && data.portfolios && data.portfolios.length > 0) {
         toast.error(
           "This slug is already in use. Please choose a different one."
         );

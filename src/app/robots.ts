@@ -24,7 +24,8 @@ export default function robots(): MetadataRoute.Robots {
           "/about/",
           "/contact/",
           "/blog/",
-          "/Portfolios/",
+          "/portfolios/",
+          "/services/",
         ],
         disallow: [
           "/api/",

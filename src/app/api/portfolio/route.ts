@@ -21,6 +21,19 @@ export async function GET(request: Request) {
     const sortBy = searchParams.get("sortBy") || "createdAt";
     const sortOrder = searchParams.get("sortOrder") || "desc";
 
+    // Debug: Log all search parameters to help diagnose the issue
+    console.log("Search parameters:", {
+      slug,
+      category,
+      status,
+      technology,
+      featured,
+      page,
+      limit,
+      sortBy,
+      sortOrder,
+    });
+
     const removeAllFromString = (str: string | null): string => {
       return str ? str.replace("all", "") : "";
     };
@@ -35,18 +48,24 @@ export async function GET(request: Request) {
       slug?: string;
       category?: string;
       status?: string;
-      technologies?: string | string[];
+      technologies?: string | string[] | RegExp;
       featured?: boolean;
     } = {};
+
     if (slug && hasValue(slug)) query.slug = slug;
     if (category && hasValue(category))
       query.category = removeAllFromString(category);
     if (status && hasValue(status)) query.status = removeAllFromString(status);
-    if (technology && hasValue(technology))
-      query.technologies = removeAllFromString(technology);
+    if (technology && hasValue(technology)) {
+      const techValue = removeAllFromString(technology);
+      // Use regex for partial matching of technologies
+      query.technologies = new RegExp(techValue, "i");
+    }
     if (featured === "true") query.featured = true;
 
-    console.log(`after:${category}, ${status}, ${technology}`);
+    // Debug: Log the final query to see what we're actually searching for
+    console.log("MongoDB query:", JSON.stringify(query));
+
     // Handle pagination and sorting
     const skip = (page - 1) * limit;
     const sort: { [key: string]: 1 | -1 } = {};
@@ -61,6 +80,15 @@ export async function GET(request: Request) {
         .select("-embeddings"),
       Portfolio.countDocuments(query),
     ]);
+
+    // Debug: Log the count of results
+    console.log(`Found ${portfolios.length} portfolios matching the query`);
+
+    // If no results, check if there are any portfolios in the database at all
+    if (portfolios.length === 0) {
+      const totalportfolios = await Portfolio.countDocuments({});
+      console.log(`Total portfolios in database: ${totalportfolios}`);
+    }
 
     if (slug && portfolios.length === 0) {
       portfolios = [
@@ -97,7 +125,7 @@ export async function GET(request: Request) {
       },
     });
   } catch (err: unknown) {
-    console.log("eror in server:");
+    console.log("error in server:");
     console.log(err);
     console.error(
       "Portfolio GET Error:",

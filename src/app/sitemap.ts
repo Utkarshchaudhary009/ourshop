@@ -28,12 +28,12 @@ async function fetchBlogPosts(): Promise<IBlog[]> {
   }
 }
 
-// Function to dynamically fetch Portfolios
-async function fetchPortfolios(): Promise<IPortfolio[]> {
+// Function to dynamically fetch portfolios
+async function fetchportfolios(): Promise<IPortfolio[]> {
   try {
     // This would typically be a database or API call
     const response = await fetch(
-      process.env.NEXT_PUBLIC_BASE_URL + "/api/Portfolios",
+      process.env.NEXT_PUBLIC_BASE_URL + "/api/portfolio",
       {
         next: { revalidate: 3600 }, // Revalidate every hour
       }
@@ -42,9 +42,9 @@ async function fetchPortfolios(): Promise<IPortfolio[]> {
     if (!response.ok) return [];
 
     const data = await response.json();
-    return data.Portfolios || [];
+    return data.portfolios || [];
   } catch (error) {
-    console.error("Error fetching Portfolios for sitemap:", error);
+    console.error("Error fetching portfolios for sitemap:", error);
     return [];
   }
 }
@@ -99,7 +99,7 @@ function getCustomSitemapEntries(): Array<{
           priority: 0.9,
         },
         {
-          url: "/Portfolios",
+          url: "/portfolios",
           lastModified: new Date(),
           changeFrequency: "monthly",
           priority: 0.9,
@@ -141,10 +141,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Fetch dynamic Portfolios
-  const Portfolios = await fetchPortfolios();
-  const PortfolioRoutes = (Portfolios || []).map((Portfolio: IPortfolio) => ({
-    url: `${DOMAIN}/Portfolios/${Portfolio.slug}`,
+  // Fetch dynamic portfolios
+  const portfolios = await fetchportfolios();
+  const PortfolioRoutes = (portfolios || []).map((Portfolio: IPortfolio) => ({
+    url: `${DOMAIN}/portfolios/${Portfolio.slug}`,
     lastModified: Portfolio.updatedAt
       ? new Date(Portfolio.updatedAt)
       : new Date(),
