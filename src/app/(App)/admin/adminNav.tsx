@@ -33,7 +33,7 @@ export default function AdminNav() {
       title: "Portfolios",
       description: "Manage your Portfolios and showcase",
       icon: <Layers className='h-8 w-8' />,
-      href: "/admin/Portfolios",
+      href: "/admin/portfolios",
     },
     {
       title: "Blog",

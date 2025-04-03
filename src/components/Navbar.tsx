@@ -9,7 +9,7 @@ import {
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Menu, Shield, X } from "lucide-react";
+import { Menu, Shield } from "lucide-react";
 import {
   SignInButton,
   SignUpButton,
@@ -27,7 +27,7 @@ interface NavbarProps {
 const navItems = [
   { name: "Home", path: "/home" },
   { name: "About", path: "/about" },
-  { name: "Portfolios", path: "/Portfolios" },
+  { name: "Portfolios", path: "/portfolios" },
   { name: "Blog", path: "/blog" },
   { name: "Contact", path: "/contact" },
 ];

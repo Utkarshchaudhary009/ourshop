@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     sort[sortBy] = sortOrder === "asc" ? 1 : -1;
 
     // Execute query with pagination
-    const [Portfolios, total] = await Promise.all([
+    let [Portfolios, total] = await Promise.all([
       Portfolio.find(query)
         .sort(sort)
         .skip(skip)
@@ -63,10 +63,27 @@ export async function GET(request: Request) {
     ]);
 
     if (slug && Portfolios.length === 0) {
-      return NextResponse.json(
-        { message: "Portfolio not found" },
-        { status: 404 }
-      );
+      Portfolios = [
+        {
+          title: "Portfolio not found",
+          slug: "",
+          description: "",
+          excerpt: "",
+          content: "",
+          category: "",
+          status: "planned",
+          technologies: [],
+          githubUrl: "",
+          liveUrl: "",
+          featuredImage: "",
+          gallery: [],
+          startDate: "",
+          endDate: "",
+          markdown: true,
+          featured: false,
+        },
+      ];
+      total = 1;
     }
 
     // Return response with pagination metadata
