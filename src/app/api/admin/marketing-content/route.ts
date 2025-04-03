@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
         excerpt: blog.excerpt,
         date: blog.publishedAt,
       })),
-      : Portfolios.map((portfolio) => ({
+      portfolios: Portfolios.map((portfolio) => ({
         _id: portfolio._id,
         title: portfolio.title,
         slug: portfolio.slug,

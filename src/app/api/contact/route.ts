@@ -24,7 +24,8 @@ export async function POST(request: Request) {
     const fromEmail = `OurShop <${
       process.env.FROM_OUR_EMAIL || "hello@utkarshchaudhary.space"
     }>`;
-    const toEmail = process.env.RECIPIENT_EMAIL;
+    const toEmail =
+      process.env.RECIPIENT_EMAIL || "ourshop005@gmail.com";
 
     // Validate the 'from' email address
     if (!fromEmail || !fromEmail.includes("@")) {
