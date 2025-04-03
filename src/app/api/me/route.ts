@@ -10,7 +10,7 @@ export async function GET() {
     const details = await PersonalDetails.findOne();
     console.log(details);
     if (!details) {
-      NextResponse.json({
+      return NextResponse.json({
         name: "Ourshop",
         age: 0,
         work: [],
