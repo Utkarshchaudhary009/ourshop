@@ -11,7 +11,7 @@ export async function GET() {
     console.log(details);
     if (!details) {
       NextResponse.json({
-        name: "",
+        name: "Ourshop",
         age: 0,
         work: [],
         stories: [],
