@@ -114,7 +114,7 @@ function Footer() {
               <span className='font-medium'>
                 Interested in advertising on this website?{" "}
                 <a
-                  href='https://utkarshchaudhary.space/contact'
+                  href=`${process.env.NEXT_PUBLIC_BASE_URL}/contact`
                   className='text-primary hover:underline transition-colors'
                 >
                   Contact me
