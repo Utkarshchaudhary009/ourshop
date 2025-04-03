@@ -25,7 +25,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, PlusCircle, Save, Trash2, Edit, Eye } from "lucide-react";
+import {
+  Loader2,
+  PlusCircle,
+  Save,
+  Trash2,
+  Edit,
+  Eye,
+  AlertCircle,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
@@ -56,6 +64,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function ServicesAdminPage() {
   const { data: services, isLoading: isLoadingServices } = useGetServices();
@@ -72,10 +81,11 @@ export default function ServicesAdminPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setValue,
     watch,
     reset,
+    trigger,
   } = useForm<ServiceFormData>({
     resolver: zodResolver(ServiceSchema),
     defaultValues: {
@@ -85,9 +95,11 @@ export default function ServicesAdminPage() {
       image: "",
       featured: false,
     },
+    mode: "onBlur",
   });
 
   const watchImage = watch("image");
+  const hasFormErrors = Object.keys(errors).length > 0;
 
   // Initialize form when editing a service
   const handleEditService = (service: IService) => {
@@ -403,12 +415,38 @@ export default function ServicesAdminPage() {
                 onSubmit={handleSubmit(onSubmit)}
                 className='space-y-6'
               >
+                {/* Form validation error summary */}
+                {hasFormErrors && (
+                  <Alert variant='destructive'>
+                    <AlertCircle className='h-4 w-4' />
+                    <AlertTitle>Validation Errors</AlertTitle>
+                    <AlertDescription>
+                      Please fix the following issues before saving:
+                      <ul className='list-disc pl-5 mt-2 space-y-1 text-sm'>
+                        {errors.name && <li>{errors.name.message}</li>}
+                        {errors.price && <li>{errors.price.message}</li>}
+                        {errors.description && (
+                          <li>{errors.description.message}</li>
+                        )}
+                        {errors.image && <li>{errors.image.message}</li>}
+                      </ul>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   <div className='space-y-2'>
                     <Label htmlFor='name'>Service Name</Label>
                     <Input
                       id='name'
                       {...register("name")}
+                      className={
+                        errors.name
+                          ? "border-red-500 focus-visible:ring-red-500"
+                          : ""
+                      }
+                      aria-invalid={errors.name ? "true" : "false"}
+                      onBlur={() => trigger("name")}
                     />
                     {errors.name && (
                       <p className='text-sm text-red-500'>
@@ -426,6 +464,13 @@ export default function ServicesAdminPage() {
                       {...register("price", {
                         valueAsNumber: true,
                       })}
+                      className={
+                        errors.price
+                          ? "border-red-500 focus-visible:ring-red-500"
+                          : ""
+                      }
+                      aria-invalid={errors.price ? "true" : "false"}
+                      onBlur={() => trigger("price")}
                     />
                     {errors.price && (
                       <p className='text-sm text-red-500'>
@@ -441,6 +486,13 @@ export default function ServicesAdminPage() {
                     id='description'
                     {...register("description")}
                     rows={5}
+                    className={
+                      errors.description
+                        ? "border-red-500 focus-visible:ring-red-500"
+                        : ""
+                    }
+                    aria-invalid={errors.description ? "true" : "false"}
+                    onBlur={() => trigger("description")}
                   />
                   {errors.description && (
                     <p className='text-sm text-red-500'>
@@ -464,6 +516,12 @@ export default function ServicesAdminPage() {
                           }
                         }}
                         disabled={isUploadingImage}
+                        className={
+                          errors.image
+                            ? "border-red-500 focus-visible:ring-red-500"
+                            : ""
+                        }
+                        aria-invalid={errors.image ? "true" : "false"}
                       />
                       {isUploadingImage && (
                         <div className='flex items-center mt-2 text-sm text-muted-foreground'>
@@ -520,10 +578,15 @@ export default function ServicesAdminPage() {
                   <Button
                     type='submit'
                     disabled={
-                      createService.isPending || updateService.isPending
+                      createService.isPending ||
+                      updateService.isPending ||
+                      hasFormErrors ||
+                      isSubmitting
                     }
                   >
-                    {createService.isPending || updateService.isPending ? (
+                    {createService.isPending ||
+                    updateService.isPending ||
+                    isSubmitting ? (
                       <>
                         <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                         Saving...
