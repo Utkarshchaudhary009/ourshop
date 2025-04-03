@@ -18,7 +18,7 @@ module.exports = async (phase) => {
           protocol: "https",
           hostname: "res.cloudinary.com",
           port: "",
-          pathname: "/dgdfxsuoh/image/upload/**",
+          pathname: "/dlatjfpao/image/upload/**",
         },
         {
           protocol: "https",

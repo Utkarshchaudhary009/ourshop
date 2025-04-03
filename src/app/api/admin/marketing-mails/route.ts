@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { MarketingMail } from "@/lib/models";
-import { checkRoleClerk } from "@/utils/roles";
+import { checkRoleSupabase } from "@/utils/roles";
 
 export async function GET() {
   try {
     // In a real application, you'd want to check if the user is an admin
     // For example:
-    const isAdmin = await checkRoleClerk("admin");
+    const isAdmin = await checkRoleSupabase("admin");
     if (!isAdmin) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }

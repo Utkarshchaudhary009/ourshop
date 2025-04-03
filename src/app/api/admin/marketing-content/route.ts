@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { Blog, Portfolio } from "@/lib/models";
-import { checkRoleClerk } from "@/utils/roles";
+import { checkRoleSupabase } from "@/utils/roles";
 
 // Cache duration in seconds (1 day)
 const CACHE_DURATION = 86400;
 
 export async function GET(request: NextRequest) {
   try {
-    const isAdmin = await checkRoleClerk("admin");
+    const isAdmin = await checkRoleSupabase("admin");
     if (!isAdmin) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
         excerpt: blog.excerpt,
         date: blog.publishedAt,
       })),
-      Portfolios: Portfolios.map((portfolio) => ({
+      : Portfolios.map((portfolio) => ({
         _id: portfolio._id,
         title: portfolio.title,
         slug: portfolio.slug,

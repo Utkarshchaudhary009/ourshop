@@ -14,9 +14,9 @@ export const meKeys = {
 // API functions
 const fetchPersonalDetails = async (): Promise<PersonalDetails> => {
   const response = await fetch("/api/me", {
-    cache: "force-cache",
+    cache: "no-store",
     next: {
-      revalidate: 3600,
+      revalidate: 0,
     },
   });
   if (!response.ok) throw new Error("Failed to fetch personal details");
@@ -40,7 +40,7 @@ export function usePersonalDetails() {
   return useQuery({
     queryKey: meKeys.details(),
     queryFn: fetchPersonalDetails,
-    staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+    staleTime: 1000 * 30,
   });
 }
 
