@@ -5,7 +5,7 @@ import {
   usePortfolios,
   useDeletePortfolio,
   useUpdatePortfolio,
-} from "@/lib/api/services/portfolioservice";
+} from "@/lib/api/services/portfolioService";
 import { IPortfolio, PortfolioFormData } from "@/lib/types";
 import {
   Table,
