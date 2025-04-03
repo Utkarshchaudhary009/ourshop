@@ -87,18 +87,25 @@ export interface ISocialLink {
   icon?: string;
 }
 
-export interface IPersonalDetails {
+export interface ITeamMember {
   name: string;
-  age: number;
-  bio: string;
-  title?: string;
+  position: string;
+  about: string;
+  skills: string[];
   profileImage?: string;
-  resumePdf?: string;
-  work: IJob[];
-  email: string;
+  socialLinks?: ISocialLink[];
+}
+
+export interface ICompanyInfo {
+  company_name: string;
+  tagline: string;
+  description: string;
+  logo?: string;
   location: string;
+  email: string;
   stories: IStory[];
   socialLinks: ISocialLink[];
+  team: ITeamMember[];
   updatedAt: Date;
 }
 
@@ -180,17 +187,15 @@ export const PortfolioSchema = z.object({
   updatedAt: z.date().optional(),
 });
 
-export const PortfolioRequestSchema = PortfolioSchema
-  .omit({
-    aiGenerated: true,
-    embeddings: true,
-    createdAt: true,
-    updatedAt: true,
-  })
-  .extend({
-    startDate: z.string().optional().nullable(),
-    endDate: z.string().optional().nullable(),
-  });
+export const PortfolioRequestSchema = PortfolioSchema.omit({
+  aiGenerated: true,
+  embeddings: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  startDate: z.string().optional().nullable(),
+  endDate: z.string().optional().nullable(),
+});
 
 export const BlogSchema = z.object({
   _id: z.string().optional(),
@@ -245,18 +250,25 @@ export const socialLinkSchema = z.object({
   icon: z.string().optional(),
 });
 
-export const personalDetailsSchema = z.object({
+export const teamMemberSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  age: z.number().min(1, { message: "Age is required" }),
-  title: z.string().optional(),
+  position: z.string().min(1, { message: "Position is required" }),
+  about: z.string().min(1, { message: "About is required" }),
+  skills: z.array(z.string()),
   profileImage: z.string().optional(),
-  resumePdf: z.string().optional(),
-  work: z.array(jobSchema),
-  stories: z.array(storySchema),
-  bio: z.string().min(1, { message: "Bio is required" }),
+  socialLinks: z.array(socialLinkSchema).optional(),
+});
+
+export const companyInfoSchema = z.object({
+  company_name: z.string().min(1, { message: "Company name is required" }),
+  tagline: z.string().min(1, { message: "Tagline is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+  logo: z.string().optional(),
   email: z.string().email({ message: "Invalid email address" }),
-  location: z.string().min(1, { message: "location is required" }),
+  location: z.string().min(1, { message: "Location is required" }),
+  stories: z.array(storySchema),
   socialLinks: z.array(socialLinkSchema),
+  team: z.array(teamMemberSchema),
 });
 
 export const ContactSchema = z.object({

@@ -60,10 +60,10 @@ export default function AdminNav() {
       href: "/admin/seo",
     },
     {
-      title: "About Me",
-      description: "Manage your about me page",
+      title: "Company Info",
+      description: "Manage company information and team",
       icon: <User className='h-8 w-8' />,
-      href: "/admin/me",
+      href: "/admin/company",
     },
     {
       title: "Services",

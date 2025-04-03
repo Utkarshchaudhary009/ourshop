@@ -37,6 +37,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return getSEOMetadata("/about", fallbackMetadata);
 }
 
+export const metadata: Metadata = {
+  title: "About Our Company",
+  description: "Learn about our company, our team, and our journey.",
+};
+
 export default function AboutPage() {
   return <AboutClient />;
 }

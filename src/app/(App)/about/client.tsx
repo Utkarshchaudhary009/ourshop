@@ -1,282 +1,282 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { personalDetailsSchema } from "@/lib/types"; // Assuming your schema is in this file
-import { z } from "zod";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link"; // Or your preferred Link component
-import { Skeleton } from "@/components/ui/skeleton";
-import MarkdownRenderer from "@/components/ui/markdown-renderer";
+import { useCompanyInfo } from "@/lib/api/services/companyService";
 import {
-  Link as LucideLinkIcon,
-  Facebook as FacebookIcon,
-  Twitter as TwitterIcon,
-  Instagram as InstagramIcon,
-  Linkedin as LinkedinIcon,
-  Github as GithubIcon,
-  FileText,
-  Download,
-  ExternalLink,
-} from "lucide-react";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Github, Linkedin, Twitter, Mail, MapPin } from "lucide-react";
+import { useMemo } from "react";
 
-const getSocialIcon = (platform: string) => {
-  const lowercasePlatform = platform.toLowerCase();
-
-  if (
-    lowercasePlatform === "facebook" ||
-    lowercasePlatform === "meta" ||
-    lowercasePlatform === "fb"
-  ) {
-    return <FacebookIcon className='h-4 w-4' />;
-  } else if (
-    lowercasePlatform === "twitter" ||
-    lowercasePlatform === "x" ||
-    lowercasePlatform === "tw"
-  ) {
-    return <TwitterIcon className='h-4 w-4' />;
-  } else if (
-    lowercasePlatform === "instagram" ||
-    lowercasePlatform === "insta"
-  ) {
-    return <InstagramIcon className='h-4 w-4' />;
-  } else if (lowercasePlatform === "linkedin" || lowercasePlatform === "in") {
-    return <LinkedinIcon className='h-4 w-4' />;
-  } else if (lowercasePlatform === "github" || lowercasePlatform === "gh") {
-    return <GithubIcon className='h-4 w-4' />;
-  } else {
-    return <LucideLinkIcon className='h-4 w-4' />;
-  }
+// Map of social platform to icon component
+const socialIcons: Record<string, React.ReactNode> = {
+  github: <Github className='h-5 w-5' />,
+  linkedin: <Linkedin className='h-5 w-5' />,
+  twitter: <Twitter className='h-5 w-5' />,
+  email: <Mail className='h-5 w-5' />,
 };
-// Define the type for the data we'll fetch
-type PersonalDetails = z.infer<typeof personalDetailsSchema>;
 
 export default function AboutClient() {
-  const [personalDetails, setPersonalDetails] =
-    useState<PersonalDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: companyInfo, isLoading } = useCompanyInfo();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/me", {
-          cache: "force-cache",
-          next: {
-            revalidate: 3600,
-          },
-        }); // Replace with your actual API endpoint
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        // You might want to validate the data here against your schema if needed
-        setPersonalDetails(data as PersonalDetails);
-        setLoading(false);
-      } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : "An unknown error occurred");
-        setLoading(false);
-      }
-    };
+  // Memoize the social links to prevent unnecessary re-renders
+  const socialLinks = useMemo(() => {
+    if (!companyInfo?.socialLinks) return [];
+    return companyInfo.socialLinks.map((link) => ({
+      ...link,
+      icon: socialIcons[link.platform.toLowerCase()] || null,
+    }));
+  }, [companyInfo?.socialLinks]);
 
-    fetchData();
-  }, []);
+  if (isLoading) {
+    return <AboutSkeleton />;
+  }
 
-  if (loading) {
+  if (!companyInfo) {
     return (
-      <div className='container mx-auto py-10'>
-        <Card>
-          <CardHeader>
-            <Skeleton className='h-8 w-3/4 mb-2' />
-            <Skeleton className='h-4 w-1/4 mb-1' />
-            <Skeleton className='h-4 w-1/3 mb-1' />
-            <Skeleton className='h-16 w-full mt-2 mb-1' />
-            <Skeleton className='h-4 w-1/2' />
-          </CardHeader>
-          <CardContent className='space-y-4'>
-            <div>
-              <Skeleton className='h-10 w-40' />
-            </div>
-
-            <div>
-              <h3 className='text-lg font-semibold mb-2'>Work Experience</h3>
-              <div className='space-y-3'>
-                <div>
-                  <Skeleton className='h-5 w-1/3 mb-1' />
-                  <Skeleton className='h-4 w-1/2 mb-1' />
-                  <Skeleton className='h-10 w-full' />
-                </div>
-                <div>
-                  <Skeleton className='h-5 w-1/3 mb-1' />
-                  <Skeleton className='h-4 w-1/2 mb-1' />
-                  <Skeleton className='h-10 w-full' />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className='text-lg font-semibold mb-2'>Stories</h3>
-              <div className='space-y-3'>
-                <Card>
-                  <CardHeader>
-                    <Skeleton className='h-5 w-1/2' />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className='h-20 w-full' />
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <Skeleton className='h-5 w-1/2' />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className='h-20 w-full' />
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            <div>
-              <h3 className='text-lg font-semibold mb-2'>Social Links</h3>
-              <div className='flex flex-wrap gap-2'>
-                <Skeleton className='h-8 w-24 rounded-full' />
-                <Skeleton className='h-8 w-32 rounded-full' />
-                <Skeleton className='h-8 w-28 rounded-full' />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className='text-center py-10'>
+        <h2 className='text-2xl font-bold'>
+          Company information not available
+        </h2>
+        <p className='mt-4'>Please check back later.</p>
       </div>
     );
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!personalDetails) {
-    return <div>No data available.</div>;
-  }
-
   return (
-    <div className='container mx-auto py-10'>
-      <Card>
-        <CardHeader>
-          <CardTitle className='text-2xl font-bold'>
-            {personalDetails.name}
-          </CardTitle>
-          <p className='text-muted-foreground'>Age: {personalDetails.age}</p>
-          <p className='text-muted-foreground'>
-            Location: {personalDetails.location}
+    <div className='container mx-auto py-12 px-4 space-y-12'>
+      {/* Company Header */}
+      <section className='flex flex-col md:flex-row gap-8 items-center'>
+        <div className='flex-1 space-y-4'>
+          <h1 className='text-4xl font-bold'>{companyInfo.company_name}</h1>
+          <p className='text-xl text-muted-foreground italic'>
+            &quot;{companyInfo.tagline}&quot;
           </p>
-          <p className='mt-2'>{personalDetails.bio}</p>
-          <p className='text-muted-foreground'>
-            Email: {personalDetails.email}
-          </p>
-        </CardHeader>
-        <CardContent className='space-y-4'>
-          {personalDetails.resumePdf && (
-            <div className='border rounded-lg p-4 bg-muted/20'>
-              <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
-                  <FileText className='h-5 w-5 text-primary' />
-                  <span className='font-medium'>Resume</span>
-                </div>
-                <div className='flex gap-2'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    asChild
-                  >
-                    <a
-                      href={personalDetails.resumePdf}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center gap-1'
-                    >
-                      <ExternalLink className='h-4 w-4' />
-                      View
-                    </a>
-                  </Button>
-                  <Button
-                    variant='default'
-                    size='sm'
-                    asChild
-                  >
-                    <a
-                      href={personalDetails.resumePdf}
-                      download='resume.pdf'
-                      className='flex items-center gap-1'
-                    >
-                      <Download className='h-4 w-4' />
-                      Download
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div>
-            <h3 className='text-lg font-semibold mb-2'>Social Links</h3>
-            {personalDetails.socialLinks.length > 0 ? (
-              <div className='flex flex-wrap gap-2'>
-                {personalDetails.socialLinks.map((link) => (
-                  <Link
-                    key={link.url}
-                    href={link.url}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors'
-                  >
-                    {getSocialIcon(link.platform)} {link.name}
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <p className='text-muted-foreground'>No social links added.</p>
-            )}
+          <div className='flex items-center text-muted-foreground'>
+            <MapPin className='mr-2 h-5 w-5' />
+            <span>{companyInfo.location}</span>
           </div>
-          <div>
-            <h3 className='text-lg font-semibold mb-2'>Work Experience</h3>
-            {personalDetails.work.length > 0 ? (
-              <ul className='list-disc pl-5'>
-                {personalDetails.work.map((job) => (
-                  <li key={`${job.company}-${job.title}`}>
-                    <div className='font-semibold'>{job.title}</div>
-                    <div className='text-muted-foreground'>
-                      {job.company} ({job.period})
+          <div className='flex gap-3 mt-4'>
+            {socialLinks.map((link) => (
+              <Link
+                href={link.url}
+                key={link.platform}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='hover:text-primary transition-colors'
+              >
+                {link.icon || link.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+        {companyInfo.logo && (
+          <div className='relative w-60 h-60'>
+            <Image
+              src={companyInfo.logo}
+              alt={companyInfo.company_name}
+              fill
+              className='object-contain'
+              sizes='(max-width: 768px) 100vw, 240px'
+            />
+          </div>
+        )}
+      </section>
+
+      {/* Company Description */}
+      <section className='prose prose-lg dark:prose-invert max-w-none'>
+        <h2 className='text-3xl font-bold mb-6'>About Us</h2>
+        <div className='space-y-4'>
+          <p>{companyInfo.description}</p>
+        </div>
+      </section>
+
+      {/* Story Section */}
+      {companyInfo.stories.length > 0 && (
+        <section className='space-y-6'>
+          <h2 className='text-3xl font-bold'>Our Journey</h2>
+          <Accordion
+            type='single'
+            collapsible
+            className='w-full'
+          >
+            {companyInfo.stories.map((story, index) => (
+              <AccordionItem
+                key={index}
+                value={`story-${index}`}
+              >
+                <AccordionTrigger className='text-xl font-medium'>
+                  {story.heading}
+                </AccordionTrigger>
+                <AccordionContent className='prose dark:prose-invert max-w-none'>
+                  <p>{story.content}</p>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </section>
+      )}
+
+      {/* Team Section */}
+      {companyInfo.team.length > 0 && (
+        <section className='space-y-8'>
+          <h2 className='text-3xl font-bold'>Our Team</h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            {companyInfo.team.map((member, index) => (
+              <Card
+                key={index}
+                className='overflow-hidden'
+              >
+                <div className='relative h-64 w-full'>
+                  <Image
+                    src={member.profileImage || "/placeholder-profile.jpg"}
+                    alt={member.name}
+                    fill
+                    className='object-cover'
+                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                  />
+                </div>
+                <CardContent className='pt-6 space-y-4'>
+                  <div>
+                    <h3 className='text-xl font-bold'>{member.name}</h3>
+                    <p className='text-muted-foreground'>{member.position}</p>
+                  </div>
+                  <p>{member.about}</p>
+                  {member.skills.length > 0 && (
+                    <div className='flex flex-wrap gap-2'>
+                      {member.skills.map((skill, i) => (
+                        <span
+                          key={i}
+                          className='px-3 py-1 bg-muted rounded-full text-sm'
+                        >
+                          {skill}
+                        </span>
+                      ))}
                     </div>
-                    {job.description && (
-                      <div className='text-sm mt-1'>{job.description}</div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+                  )}
+                  {member.socialLinks && member.socialLinks.length > 0 && (
+                    <div className='flex gap-3'>
+                      {member.socialLinks.map((link) => (
+                        <Link
+                          href={link.url}
+                          key={link.platform}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='hover:text-primary transition-colors'
+                        >
+                          {socialIcons[link.platform.toLowerCase()] ||
+                            link.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        </section>
+      )}
 
-          <div>
-            <h3 className='text-lg font-semibold mb-2'>Stories</h3>
-            {personalDetails.stories.length > 0 ? (
-              <div className='space-y-4'>
-                {personalDetails.stories.map((story) => (
-                  <Card key={story.heading}>
-                    <CardHeader>
-                      <CardTitle>{story.heading}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <MarkdownRenderer content={story.content} />
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <p className='text-muted-foreground'>No stories added.</p>
-            )}
+      {/* Contact CTA */}
+      <section className='bg-muted p-8 rounded-lg text-center space-y-4'>
+        <h2 className='text-2xl font-bold'>Interested in working with us?</h2>
+        <p>Reach out to discuss how we can help with your next project.</p>
+        <Button
+          asChild
+          size='lg'
+        >
+          <Link href='/contact'>Contact Us</Link>
+        </Button>
+      </section>
+    </div>
+  );
+}
+
+// Loading skeleton for the About page
+function AboutSkeleton() {
+  return (
+    <div className='container mx-auto py-12 px-4 space-y-12'>
+      {/* Company Header Skeleton */}
+      <section className='flex flex-col md:flex-row gap-8 items-center'>
+        <div className='flex-1 space-y-4'>
+          <Skeleton className='h-10 w-3/4' />
+          <Skeleton className='h-6 w-1/2' />
+          <Skeleton className='h-5 w-1/3' />
+          <div className='flex gap-3 mt-4'>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className='h-8 w-8 rounded-full'
+              />
+            ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+        <Skeleton className='w-60 h-60 rounded-lg' />
+      </section>
+
+      {/* About Skeleton */}
+      <section className='space-y-6'>
+        <Skeleton className='h-8 w-40' />
+        <div className='space-y-4'>
+          <Skeleton className='h-5 w-full' />
+          <Skeleton className='h-5 w-full' />
+          <Skeleton className='h-5 w-4/5' />
+        </div>
+      </section>
+
+      {/* Story Skeleton */}
+      <section className='space-y-6'>
+        <Skeleton className='h-8 w-40' />
+        <div className='space-y-4'>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className='space-y-2'
+            >
+              <Skeleton className='h-8 w-1/2' />
+              <Skeleton className='h-24 w-full' />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Team Skeleton */}
+      <section className='space-y-8'>
+        <Skeleton className='h-8 w-32' />
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          {Array.from({ length: 3 }).map((_, i) => (
+            <Card
+              key={i}
+              className='overflow-hidden'
+            >
+              <Skeleton className='h-64 w-full' />
+              <CardContent className='pt-6 space-y-4'>
+                <div>
+                  <Skeleton className='h-6 w-36' />
+                  <Skeleton className='h-4 w-24 mt-2' />
+                </div>
+                <Skeleton className='h-4 w-full' />
+                <Skeleton className='h-4 w-full' />
+                <div className='flex flex-wrap gap-2'>
+                  {Array.from({ length: 4 }).map((_, j) => (
+                    <Skeleton
+                      key={j}
+                      className='h-6 w-16 rounded-full'
+                    />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

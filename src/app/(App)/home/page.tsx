@@ -1,5 +1,5 @@
 "use client";
-import { usePersonalDetails } from "@/lib/api/services/meService";
+import { useCompanyInfo } from "@/lib/api/services/companyService";
 import { useFeaturedPortfolios } from "@/lib/api/services/portfolioService";
 import { useFeaturedBlogs } from "@/lib/api/services/blogService";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -15,16 +15,16 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
-import { IBlog, IPortfolio, IPersonalDetails } from "@/lib/types";
+import { IBlog, IPortfolio, ICompanyInfo } from "@/lib/types";
 import { memo, useMemo, Suspense } from "react";
 
 // Memoized components to reduce re-renders
 const HeroSection = memo(
   ({
-    personalDetails,
+    companyInfo,
     isLoading,
   }: {
-    personalDetails: IPersonalDetails;
+    companyInfo: ICompanyInfo;
     isLoading: boolean;
   }) => {
     return (
@@ -41,21 +41,21 @@ const HeroSection = memo(
           ) : (
             <>
               <h1 className='text-4xl md:text-5xl font-bold'>
-                Hi, I&apos;m {personalDetails?.name || "Your Name"}
+                {companyInfo?.company_name || "Your Company"}
               </h1>
               <p className='text-xl text-muted-foreground'>
-                {personalDetails?.title || "Your Profession"}
+                {companyInfo?.tagline || "Your Company Tagline"}
               </p>
               <p className='text-lg'>
-                {personalDetails?.bio || "Your short bio..."}
+                {companyInfo?.description || "Your company description..."}
               </p>
               <div className='flex flex-wrap gap-3'>
                 <Button asChild>
                   <Link
-                    href='/portfolios'
-                    aria-label='View portfolios'
+                    href='/services'
+                    aria-label='Our Services'
                   >
-                    View portfolios
+                    Our Services
                   </Link>
                 </Button>
                 <Button
@@ -64,9 +64,9 @@ const HeroSection = memo(
                 >
                   <Link
                     href='/contact'
-                    aria-label='Contact Me'
+                    aria-label='Contact Us'
                   >
-                    Contact Me
+                    Contact Us
                   </Link>
                 </Button>
               </div>
@@ -76,17 +76,17 @@ const HeroSection = memo(
         <div className='flex-1 max-w-md'>
           {isLoading ? (
             <Skeleton className='w-full aspect-square rounded-xl' />
-          ) : personalDetails?.profileImage ? (
+          ) : companyInfo?.logo ? (
             <AspectRatio
               ratio={1}
               className='bg-muted rounded-xl overflow-hidden'
             >
               <Image
-                src={personalDetails.profileImage}
-                alt={personalDetails?.name || "Profile"}
+                src={companyInfo.logo}
+                alt={companyInfo?.company_name || "Company Logo"}
                 fill
                 sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                className='object-cover'
+                className='object-contain'
                 priority
                 fetchPriority='high'
                 loading='eager'
@@ -98,7 +98,7 @@ const HeroSection = memo(
               ratio={1}
               className='bg-muted rounded-xl flex items-center justify-center'
             >
-              <span className='text-muted-foreground'>No image available</span>
+              <span className='text-muted-foreground'>No logo available</span>
             </AspectRatio>
           )}
         </div>
@@ -321,8 +321,7 @@ BlogsSection.displayName = "BlogsSection";
 
 function HomePage() {
   // Using TanStack Query for all data fetching - hooks already have caching configured internally
-  const { data: personalDetails, isLoading: isLoadingDetails } =
-    usePersonalDetails();
+  const { data: companyInfo, isLoading: isLoadingDetails } = useCompanyInfo();
 
   const { data: featuredportfoliosData, isLoading: isLoadingportfolios } =
     useFeaturedPortfolios();
@@ -346,21 +345,21 @@ function HomePage() {
     <main className='container mx-auto py-12 px-4 space-y-16'>
       {/* Hero Section - Critical Path Rendering */}
       <HeroSection
-        personalDetails={personalDetails as IPersonalDetails}
+        companyInfo={companyInfo as ICompanyInfo}
         isLoading={isLoadingDetails}
       />
 
       {/* Featured portfolios Section */}
       <section className='space-y-6'>
         <div className='flex justify-between items-center'>
-          <h2 className='text-3xl font-bold'>Featured portfolios</h2>
+          <h2 className='text-3xl font-bold'>Featured Projects</h2>
           <Button
             variant='outline'
             asChild
           >
             <Link
               href='/portfolios'
-              aria-label='View All portfolios'
+              aria-label='View All Projects'
             >
               View All
             </Link>
@@ -389,14 +388,14 @@ function HomePage() {
       {/* Featured Blogs Section */}
       <section className='space-y-6'>
         <div className='flex justify-between items-center'>
-          <h2 className='text-3xl font-bold'>Featured Blogs</h2>
+          <h2 className='text-3xl font-bold'>Company Blog</h2>
           <Button
             variant='outline'
             asChild
           >
             <Link
               href='/blog'
-              aria-label='View All blogs'
+              aria-label='View All Blog Posts'
             >
               View All
             </Link>

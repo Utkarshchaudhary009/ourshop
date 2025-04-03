@@ -9,4 +9,5 @@ export * from "./blogService";
 export * from "./contactService";
 export * from "./adService";
 export * from "./serviceService";
+export * from "./companyService";
 // Add more service exports here

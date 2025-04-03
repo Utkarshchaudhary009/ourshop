@@ -3,7 +3,7 @@ import {
   IPortfolio,
   IBlog,
   IContact,
-  IPersonalDetails,
+  ICompanyInfo,
   IAd,
   IMarketingMail,
   ISEO,
@@ -15,20 +15,11 @@ const DEFAULT_IMG =
 
 // Add interface for model instance types
 
-const PersonalDetailsSchema = new mongoose.Schema<IPersonalDetails>({
-  name: { type: String, required: true },
-  age: { type: Number, required: true },
-  bio: { type: String, required: true },
-  title: { type: String },
-  profileImage: { type: String },
-  resumePdf: { type: String },
-  work: [
-    {
-      title: { type: String, required: true },
-      company: { type: String, required: true },
-      period: { type: String, required: true },
-    },
-  ],
+const CompanyInfoSchema = new mongoose.Schema<ICompanyInfo>({
+  company_name: { type: String, required: true },
+  tagline: { type: String, required: true },
+  description: { type: String, required: true },
+  logo: { type: String },
   email: { type: String, required: true },
   location: { type: String, required: true },
   stories: [
@@ -42,6 +33,24 @@ const PersonalDetailsSchema = new mongoose.Schema<IPersonalDetails>({
       name: { type: String, required: true },
       url: { type: String, required: true },
       platform: { type: String, required: true },
+      icon: { type: String },
+    },
+  ],
+  team: [
+    {
+      name: { type: String, required: true },
+      position: { type: String, required: true },
+      about: { type: String, required: true },
+      skills: [{ type: String }],
+      profileImage: { type: String },
+      socialLinks: [
+        {
+          name: { type: String, required: true },
+          url: { type: String, required: true },
+          platform: { type: String, required: true },
+          icon: { type: String },
+        },
+      ],
     },
   ],
   updatedAt: { type: Date, default: Date.now },
@@ -299,9 +308,10 @@ export const SEO =
 export const Sitemap =
   mongoose.models.Sitemap || mongoose.model("Sitemap", SitemapSchema);
 
-export const PersonalDetails =
-  mongoose.models.PersonalDetails ||
-  mongoose.model<IPersonalDetails>("PersonalDetails", PersonalDetailsSchema);
+export const CompanyInfo =
+  mongoose.models.CompanyInfo ||
+  mongoose.model<ICompanyInfo>("CompanyInfo", CompanyInfoSchema);
+
 export const Contact =
   mongoose.models.Contact || mongoose.model<IContact>("Contact", ContactSchema);
 
