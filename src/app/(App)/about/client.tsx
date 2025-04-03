@@ -62,14 +62,14 @@ export default function AboutClient() {
           <div className='flex items-center text-muted-foreground'>
             <MapPin className='mr-2 h-5 w-5' />
             <span>{companyInfo.location}</span>
-          </div>
+                </div>
           <div className='flex gap-3 mt-4'>
             {socialLinks.map((link) => (
               <Link
                 href={link.url}
                 key={link.platform}
-                target='_blank'
-                rel='noopener noreferrer'
+                      target='_blank'
+                      rel='noopener noreferrer'
                 className='hover:text-primary transition-colors'
               >
                 {link.icon || link.name}
@@ -147,7 +147,7 @@ export default function AboutClient() {
                   <div>
                     <h3 className='text-xl font-bold'>{member.name}</h3>
                     <p className='text-muted-foreground'>{member.position}</p>
-                  </div>
+              </div>
                   <p>{member.about}</p>
                   {member.skills.length > 0 && (
                     <div className='flex flex-wrap gap-2'>
@@ -159,24 +159,24 @@ export default function AboutClient() {
                           {skill}
                         </span>
                       ))}
-                    </div>
-                  )}
+            </div>
+          )}
                   {member.socialLinks && member.socialLinks.length > 0 && (
                     <div className='flex gap-3'>
                       {member.socialLinks.map((link) => (
-                        <Link
-                          href={link.url}
+                  <Link
+                    href={link.url}
                           key={link.platform}
-                          target='_blank'
-                          rel='noopener noreferrer'
+                    target='_blank'
+                    rel='noopener noreferrer'
                           className='hover:text-primary transition-colors'
-                        >
+                  >
                           {socialIcons[link.platform.toLowerCase()] ||
                             link.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                  </Link>
+                ))}
+              </div>
+            )}
                 </CardContent>
               </Card>
             ))}
@@ -195,7 +195,7 @@ export default function AboutClient() {
           <Link href='/contact'>Contact Us</Link>
         </Button>
       </section>
-    </div>
+                    </div>
   );
 }
 
@@ -258,7 +258,7 @@ function AboutSkeleton() {
             >
               <Skeleton className='h-64 w-full' />
               <CardContent className='pt-6 space-y-4'>
-                <div>
+          <div>
                   <Skeleton className='h-6 w-36' />
                   <Skeleton className='h-4 w-24 mt-2' />
                 </div>
@@ -272,10 +272,10 @@ function AboutSkeleton() {
                     />
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
       </section>
     </div>
   );
