@@ -26,6 +26,113 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { companyInfoSchema } from "@/lib/types";
 import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { FieldErrors } from "react-hook-form";
+
+// Error summary component to display validation errors
+const FormErrorSummary = ({
+  errors,
+  activeTab,
+  setActiveTab,
+}: {
+  errors: FieldErrors<ICompanyInfo>;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}) => {
+  if (Object.keys(errors).length === 0) return null;
+
+  // Helper to check if a specific tab has errors
+  const hasTabErrors = (tabName: string) => {
+    switch (tabName) {
+      case "general":
+        return !!(
+          errors.company_name ||
+          errors.tagline ||
+          errors.description ||
+          errors.email ||
+          errors.location ||
+          errors.logo
+        );
+      case "team":
+        return !!errors.team;
+      case "social":
+        return !!errors.socialLinks;
+      case "stories":
+        return !!errors.stories;
+      default:
+        return false;
+    }
+  };
+
+  // Find the first tab with errors if not already on a tab with errors
+  const navigateToFirstErrorTab = () => {
+    if (!hasTabErrors(activeTab)) {
+      if (hasTabErrors("general")) setActiveTab("general");
+      else if (hasTabErrors("team")) setActiveTab("team");
+      else if (hasTabErrors("social")) setActiveTab("social");
+      else if (hasTabErrors("stories")) setActiveTab("stories");
+    }
+  };
+
+  return (
+    <div className='mb-6 p-4 border border-red-300 bg-red-50 rounded-md'>
+      <div className='flex justify-between items-start'>
+        <h3 className='text-red-600 font-medium mb-2'>
+          Please fix the following errors before saving:
+        </h3>
+        <Button
+          type='button'
+          variant='outline'
+          size='sm'
+          className='text-red-600 border-red-300 hover:bg-red-100'
+          onClick={navigateToFirstErrorTab}
+        >
+          Go to first error
+        </Button>
+      </div>
+      <ul className='list-disc pl-5 space-y-1 text-sm text-red-600'>
+        {errors.company_name && (
+          <li>Company name: {errors.company_name.message}</li>
+        )}
+        {errors.tagline && <li>Tagline: {errors.tagline.message}</li>}
+        {errors.description && (
+          <li>Description: {errors.description.message}</li>
+        )}
+        {errors.email && <li>Email: {errors.email.message}</li>}
+        {errors.location && <li>Location: {errors.location.message}</li>}
+        {errors.logo && <li>Logo: {errors.logo.message}</li>}
+        {errors.team && (
+          <li>
+            Team Members:{" "}
+            {errors.team.message ||
+              "Please check team member fields for errors"}
+            {errors.team.root?.message && (
+              <span> ({errors.team.root.message})</span>
+            )}
+          </li>
+        )}
+        {errors.socialLinks && (
+          <li>
+            Social Links:{" "}
+            {errors.socialLinks.message ||
+              "Please check social link fields for errors"}
+            {errors.socialLinks.root?.message && (
+              <span> ({errors.socialLinks.root.message})</span>
+            )}
+          </li>
+        )}
+        {errors.stories && (
+          <li>
+            Company Stories:{" "}
+            {errors.stories.message || "Please check story fields for errors"}
+            {errors.stories.root?.message && (
+              <span> ({errors.stories.root.message})</span>
+            )}
+          </li>
+        )}
+      </ul>
+    </div>
+  );
+};
 
 export default function CompanyAdminPage() {
   const { data: companyInfo, isLoading } = useCompanyInfo();
@@ -186,6 +293,12 @@ export default function CompanyAdminPage() {
     <div className='p-4 space-y-4'>
       <h1 className='text-2xl font-bold'>Company Information</h1>
 
+      <FormErrorSummary
+        errors={errors}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Tabs
           value={activeTab}
@@ -193,9 +306,24 @@ export default function CompanyAdminPage() {
         >
           <TabsList className='mb-4'>
             <TabsTrigger value='general'>General</TabsTrigger>
-            <TabsTrigger value='team'>Team Members</TabsTrigger>
-            <TabsTrigger value='social'>Social Links</TabsTrigger>
-            <TabsTrigger value='stories'>Company Stories</TabsTrigger>
+            <TabsTrigger value='team'>
+              Team Members{" "}
+              {errors.team && (
+                <span className='ml-1 text-xs text-red-500'>⚠️</span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value='social'>
+              Social Links{" "}
+              {errors.socialLinks && (
+                <span className='ml-1 text-xs text-red-500'>⚠️</span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value='stories'>
+              Company Stories{" "}
+              {errors.stories && (
+                <span className='ml-1 text-xs text-red-500'>⚠️</span>
+              )}
+            </TabsTrigger>
           </TabsList>
 
           {/* General Information Tab */}
