@@ -269,6 +269,7 @@ export const companyInfoSchema = z.object({
   stories: z.array(storySchema),
   socialLinks: z.array(socialLinkSchema),
   team: z.array(teamMemberSchema),
+  updatedAt: z.date().default(() => new Date()),
 });
 
 export const ContactSchema = z.object({
