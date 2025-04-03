@@ -167,7 +167,7 @@ export const PortfolioSchema = z.object({
   slug: z.string().min(3, "Slug must be at least 3 characters"),
   content: z.string().min(100, "Content must be at least 100 characters"),
   description: z.string().min(30, "Description must be at least 50 characters"),
-  excerpt: z.string().max(160, "Excerpt must not exceed 160 characters"),
+  excerpt: z.string().max(360, "Excerpt must not exceed 160 characters"),
   featuredImage: z.string().optional(),
   gallery: z
     .array(z.string().url("Gallery images must be valid URLs"))
